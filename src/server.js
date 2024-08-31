@@ -3,7 +3,7 @@ import cors from 'cors';
 import pino from 'pino-http';
 
 import { env } from './utils/env.js';
-import { MovieCollection } from './db/models/Movie.js';
+import * as movieServisces from './services/movies.js';
 
 console.log(process.env.PORT);
 
@@ -21,22 +21,30 @@ export const startServer = () => {
   app.use(express.json());
 
   app.get('/movies', async (req, res) => {
-    const movies = await MovieCollection.find();
-    res.status(200).json({
+    const movies = await movieServisces.getAllMovies();
+
+    res.json({
+      status: 200,
+      message: 'All movies found',
       data: movies,
     });
   });
 
-  app.get('movies/:movieId', async (req, res) => {
+  app.get('/movies/:movieId', async (req, res) => {
     const { movieId } = req.params;
-    const data = await MovieCollection.findById(movieId);
+    const data = await movieServisces.getMovieById(movieId);
 
     if (!data) {
       return res.status(404).json({
         message: `Movie with ${movieId} not found`,
       });
     }
-    res.json({});
+
+    res.json({
+      status: 200,
+      message: `Movie with ${movieId} found`,
+      data,
+    });
   });
 
   app.use((req, res) => {

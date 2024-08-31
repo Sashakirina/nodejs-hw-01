@@ -6,19 +6,22 @@ const movieSchema = new Schema(
       type: String,
       required: true,
     },
+    year: {
+      type: Number,
+      required: true,
+    },
     director: {
       type: String,
       required: true,
     },
     genre: {
       type: String,
-      enum: ['fantastic', 'love story'],
       required: true,
     },
-    favorite: {
+    favorites: {
       type: Boolean,
-      default: false,
       required: true,
+      default: false,
     },
   },
   { versionKey: false, timestamps: true },
