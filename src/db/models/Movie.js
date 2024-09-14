@@ -27,4 +27,13 @@ const movieSchema = new Schema(
   { versionKey: false, timestamps: true },
 );
 
+export const sortFields = [
+  'title',
+  'year',
+  'director',
+  'genre',
+  'favorites',
+  '_id',
+];
+
 export const MovieCollection = model('movie', movieSchema);

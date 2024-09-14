@@ -1,13 +1,27 @@
 import * as movieServisces from '../services/movies.js';
 import createHttpError from 'http-errors';
+import parsePaginationParams from '../utils/parsePaginationParams.js';
+import parseSortParams from '../utils/parseSortParams.js';
+import { sortFields } from '../db/models/Movie.js';
+import parseMovieFilterParams from '../utils/filter/parseMovieFilterParams.js';
 
 export const getMoviesController = async (req, res) => {
-  const movies = await movieServisces.getAllMovies();
+  const { page, perPage } = parsePaginationParams(req.query);
+  const { sortBy, sortOrder } = parseSortParams({ ...req.query, sortFields });
+  const filter = parseMovieFilterParams(req.query);
+
+  const data = await movieServisces.getAllMovies({
+    perPage,
+    page,
+    sortBy,
+    sortOrder,
+    filter,
+  });
 
   res.json({
     status: 200,
     message: 'All movies found',
-    data: movies,
+    data,
   });
 };
 
@@ -29,8 +43,8 @@ export const getMovieByIdController = async (req, res) => {
   });
 };
 
-export const addMovieController = (req, res) => {
-  const movie = movieServisces.createMovie(req.body);
+export const addMovieController = async (req, res) => {
+  const movie = await movieServisces.createMovie(req.body);
 
   res.status(201).json({
     status: 201,
