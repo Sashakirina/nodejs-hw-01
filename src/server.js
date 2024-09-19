@@ -6,6 +6,7 @@ import moviesRouter from './routers/movies.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { logger } from './middlewares/logger.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
+import authRouter from './routers/auth.js';
 
 console.log(process.env.PORT);
 
@@ -17,6 +18,7 @@ export const startServer = () => {
   app.use(express.json());
 
   app.use('/movies', moviesRouter);
+  app.use('/auth', authRouter);
 
   app.use(notFoundHandler);
 
