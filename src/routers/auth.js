@@ -18,4 +18,10 @@ authRouter.post(
   ctrlWrapper(authControllers.siginController),
 );
 
+authRouter.post(
+  '/refresh',
+  validateBody(userSighninSchema),
+  ctrlWrapper(authControllers.refreshController),
+);
+
 export default authRouter;
