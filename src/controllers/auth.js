@@ -22,6 +22,17 @@ export const signupController = async (req, res) => {
   });
 };
 
+export const verifyController = async (req, res) => {
+  const { token } = req.query;
+  await authService.verify(token);
+
+  res.json({
+    status: 200,
+    message: 'Successfully verified email',
+    data: {},
+  });
+};
+
 export const siginController = async (req, res) => {
   const session = await authService.signin(req.body);
 
