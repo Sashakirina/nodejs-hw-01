@@ -1,9 +1,15 @@
 import * as movieServisces from '../services/movies.js';
+
 import createHttpError from 'http-errors';
+
 import parsePaginationParams from '../utils/parsePaginationParams.js';
 import parseSortParams from '../utils/parseSortParams.js';
 import { sortFields } from '../db/models/Movie.js';
 import parseMovieFilterParams from '../utils/filter/parseMovieFilterParams.js';
+import saveFileToUploadDir from '../utils/saveFileTouploadDir.js';
+import saveFileTpCloudinary from '../utils/saveFileToCloudinary.js';
+
+import { env } from '../utils/env.js';
 
 export const getMoviesController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
@@ -44,12 +50,26 @@ export const getMovieByIdController = async (req, res) => {
 };
 
 export const addMovieController = async (req, res) => {
-  const movie = await movieServisces.createMovie(req.body);
+  let poster;
+  if (req.file) {
+    if (env('ENABLE_CLOUDINARY') === 'true') {
+      poster = await saveFileTpCloudinary(req.file, 'posters');
+    } else {
+      poster = await saveFileToUploadDir(req.file);
+    }
+  }
 
+  const { _id: userId } = req.user;
+
+  const data = await movieServisces.createMovie({
+    ...req.body,
+    poster,
+    userId,
+  });
   res.status(201).json({
     status: 201,
     message: 'movie successfully added',
-    data: movie,
+    data,
   });
 };
 

@@ -12,6 +12,7 @@ import { validateBody } from '../utils/validateBody.js';
 import { movieAddSchema, movieUpdateSchema } from '../validation/movie.js';
 import { isValidId } from '../middlewares/isValidId.js';
 import authenticate from '../middlewares/authenticate.js';
+import upload from '../middlewares/upload.js';
 
 const moviesRouter = Router();
 
@@ -23,6 +24,7 @@ moviesRouter.get('/:movieId', isValidId, ctrlWrapper(getMovieByIdController));
 
 moviesRouter.post(
   '/',
+  upload.single('poster'),
   validateBody(movieAddSchema),
   ctrlWrapper(addMovieController),
 );

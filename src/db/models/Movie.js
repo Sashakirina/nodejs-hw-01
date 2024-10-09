@@ -23,6 +23,14 @@ const movieSchema = new Schema(
       required: true,
       default: false,
     },
+    poster: {
+      type: String,
+    },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'user',
+      required: true,
+    },
   },
   { versionKey: false, timestamps: true },
 );
